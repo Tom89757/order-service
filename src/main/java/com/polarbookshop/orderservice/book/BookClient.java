@@ -3,6 +3,9 @@ package com.polarbookshop.orderservice.book;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
 
 /**
  * @author Tom89757
@@ -22,6 +25,11 @@ public class BookClient {
                 .get()
                 .uri(BOOKS_ROOT_API + isbn)
                 .retrieve()
-                .bodyToMono(Book.class);
+                .bodyToMono(Book.class)
+                .timeout(Duration.ofSeconds(3), Mono.empty())
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofMillis(100))
+                );
+
     }
 }
