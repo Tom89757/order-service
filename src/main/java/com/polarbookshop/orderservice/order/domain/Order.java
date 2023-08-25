@@ -12,13 +12,13 @@ import java.time.Instant;
  * @author Tom89757
  */
 
-@Table("order")
+@Table("orders")
 public record Order(
 
         @Id
         Long id,
 
-        String bokIsbn,
+        String bookIsbn,
         String bookName,
         Double bookPrice,
         Integer quantity,
