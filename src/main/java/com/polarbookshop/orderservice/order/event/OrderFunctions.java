@@ -23,7 +23,7 @@ public class OrderFunctions {
             OrderService orderService
     ) {
         return flux ->
-                orderService.consumeOrderDispatchedEvent(flus)
+                orderService.consumeOrderDispatchedEvent(flux)
                         .doOnNext(order -> log.info("The order with id {} is dispatched.",
                                 order.id()))
                         .subscribe();
