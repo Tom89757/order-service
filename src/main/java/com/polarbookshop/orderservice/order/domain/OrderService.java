@@ -2,6 +2,7 @@ package com.polarbookshop.orderservice.order.domain;
 
 import com.polarbookshop.orderservice.book.Book;
 import com.polarbookshop.orderservice.book.BookClient;
+import com.polarbookshop.orderservice.order.event.OrderAcceptedMessage;
 import com.polarbookshop.orderservice.order.event.OrderDispatchedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final StreamBridge streamBridge;
 
-    public OrderService(BookClient bookClient, OrderRepository orderRepository) {
+    public OrderService(StreamBridge streamBridge, BookClient bookClient, OrderRepository orderRepository) {
         this.bookClient = bookClient;
         this.orderRepository = orderRepository;
+        this.streamBridge = streamBridge;
     }
 
     public static Order buildAcceptedOrder(Book book, int quantity) {
@@ -70,5 +72,13 @@ public class OrderService {
                 existingOrder.lastModifiedDate(),
                 existingOrder.version()
         );
+    }
+
+    private void publishOrderAcceptedEvent(Order order) {
+        if (!order.status().equals(OrderStatus.ACCEPTED)) {
+            return;
+        }
+        var orderAcceptedMessage =
+                new OrderAcceptedMessage(order.id());
     }
 }
