@@ -3,6 +3,9 @@ package com.polarbookshop.orderservice.order.domain;
 import com.polarbookshop.orderservice.book.Book;
 import com.polarbookshop.orderservice.book.BookClient;
 import com.polarbookshop.orderservice.order.event.OrderDispatchedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,8 +16,11 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     private final BookClient bookClient;
     private final OrderRepository orderRepository;
+    private final StreamBridge streamBridge;
 
     public OrderService(BookClient bookClient, OrderRepository orderRepository) {
         this.bookClient = bookClient;
