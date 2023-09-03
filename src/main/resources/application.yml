@@ -22,6 +22,8 @@ spring:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
     url: jdbc:postgresql://localhost:5432/polardb_order
+  config:
+    import: "optional:configserver:"
   cloud:
     function:
       definition: dispatchOrder
